@@ -1,9 +1,8 @@
 import csv
 import os
 
-from django.core.management.base import BaseCommand
-
 from api.models import Ingredient, Tag
+from django.core.management.base import BaseCommand
 
 INGREDIENS_FILE = 'ingredients.csv'
 TAGS_FILE = 'tags.csv'
