@@ -96,10 +96,14 @@ class Recipe(models.Model):
 
 
 class IngredientQuantity(models.Model):
+    """
+    Модель: количество ингредиентов входящих
+    в рецепт
+    """
     ingredient = models.ForeignKey(
         Ingredient,
         on_delete=models.CASCADE,
-        verbose_name='Ингредиент',
+        verbose_name='Ингредиент в рецепте',
     )
     recipe = models.ForeignKey(
         Recipe,
@@ -107,7 +111,7 @@ class IngredientQuantity(models.Model):
         verbose_name='Рецепт',
     )
     amount = models.PositiveSmallIntegerField(
-        verbose_name='Количество',
+        verbose_name='Количество ингредиента',
         validators=[
             MinValueValidator(1, message='Количество должно быть больше нуля')
         ]
@@ -121,8 +125,8 @@ class IngredientQuantity(models.Model):
                 name='unique_ingredients_in_recipe'
             )
         ]
-        verbose_name = 'Количество ингредиента'
-        verbose_name_plural = 'Количество ингредиентов'
+        verbose_name = 'Количество ингредиента в рецепте'
+        verbose_name_plural = 'Количество ингредиентов в рецепте'
 
 
 class Favorite(models.Model):

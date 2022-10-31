@@ -9,14 +9,12 @@ from .models import (Favorite, Ingredient, IngredientQuantity, Recipe,
 class TagSerializer(serializers.ModelSerializer):
     class Meta:
         model = Tag
-        # fields = ('id', 'name', 'color', 'slug')
         fields = '__all__'
 
 
 class IngredientSerializer(serializers.ModelSerializer):
     class Meta:
         model = Ingredient
-        # fields = ('id', 'name', 'measurement_unit')
         fields = '__all__'
 
 
@@ -93,41 +91,41 @@ class RecipeWriteSerializer(serializers.ModelSerializer):
     def validate(self, data):
         ingredients = self.initial_data.get('ingredients')
         if not ingredients:
-            raise serializers.ValidationError({
-                'ingredients': 'Нужно выбрать хотя бы один ингредиент!'
-            })
+            raise serializers.ValidationError(
+                {'ingredients': 'Нужно выбрать хотя бы один ингредиент'}
+            )
         ingredients_list = []
         for ingredient in ingredients:
             ingredient_id = ingredient['id']
             if ingredient_id in ingredients_list:
-                raise serializers.ValidationError({
-                    'ingredients': 'Ингредиенты должны быть уникальными!'
-                })
+                raise serializers.ValidationError(
+                    {'ingredients': 'Ингредиенты должны быть уникальными'}
+                )
             ingredients_list.append(ingredient_id)
             amount = ingredient['amount']
             if int(amount) <= 0:
-                raise serializers.ValidationError({
-                    'amount': 'Количество ингредиента должно быть больше нуля!'
-                })
+                raise serializers.ValidationError(
+                    {'amount': 'Количество ингредиента должно быть больше 0'}
+                )
 
         tags = self.initial_data.get('tags')
         if not tags:
-            raise serializers.ValidationError({
-                'tags': 'Нужно выбрать хотя бы один тэг!'
-            })
+            raise serializers.ValidationError(
+                {'tags': 'Нужно указать хотя бы один тэг'}
+            )
         tags_list = []
         for tag in tags:
             if tag in tags_list:
-                raise serializers.ValidationError({
-                    'tags': 'Тэги должны быть уникальными!'
-                })
+                raise serializers.ValidationError(
+                    {'tags': 'Тэги должны быть уникальными'}
+                )
             tags_list.append(tag)
 
         cooking_time = self.initial_data.get('cooking_time')
         if int(cooking_time) <= 0:
-            raise serializers.ValidationError({
-                'cooking_time': 'Время приготовления должно быть больше 0!'
-            })
+            raise serializers.ValidationError(
+                {'cooking_time': 'Время приготовления должно быть больше нуля'}
+            )
 
         return data
 
@@ -174,8 +172,7 @@ class RecipeWriteSerializer(serializers.ModelSerializer):
     def to_representation(self, instance):
         request = self.context.get('request')
         context = {'request': request}
-        return RecipeListSerializer(
-            instance, context=context).data
+        return RecipeListSerializer(instance, context=context).data
 
 
 class RecipeRepresentationSerializer(serializers.ModelSerializer):
@@ -195,9 +192,9 @@ class FavoriteSerializer(serializers.ModelSerializer):
             return False
         recipe = data['recipe']
         if Favorite.objects.filter(user=request.user, recipe=recipe).exists():
-            raise serializers.ValidationError({
-                'status': 'Рецепт уже есть в избранном!'
-            })
+            raise serializers.ValidationError(
+                {'status': 'Рецепт уже есть в избранном'}  # errors
+            )
         return data
 
     def to_representation(self, instance):
@@ -220,9 +217,9 @@ class ShoppingCartSerializer(serializers.ModelSerializer):
         if ShoppingCart.objects.filter(
             user=request.user, recipe=recipe
         ).exists():
-            raise serializers.ValidationError({
-                'status': 'Рецепт уже есть в списке покупок!'
-            })
+            raise serializers.ValidationError(
+                {'status': 'Рецепт уже есть в списке покупок'}  # errors
+            )
         return data
 
     def to_representation(self, instance):
