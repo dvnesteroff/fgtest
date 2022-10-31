@@ -45,14 +45,14 @@ jobs:
         with:
           context: ./backend
           push: true
-          tags: iwebdroid/fgtest_be:v1
+          tags: iwebdroid/fgtest_be:v2
       - name: Push FE to Docker Hub
         uses: docker/build-push-action@v2 
         with:
           context: ./frontend
           file: ./frontend/Dockerfile
           push: true
-          tags: iwebdroid/fgtest_fe:v1
+          tags: iwebdroid/fgtest_fe:v2
   
   deploy:
     if: github.ref == 'refs/heads/master' || github.ref == 'refs/heads/main'
@@ -67,7 +67,7 @@ jobs:
           key: ${{ secrets.SSH_KEY }}
           passphrase: ${{ secrets.PASSPHRASE }}
           script: |
-            sudo docker pull iwebdroid/fgtest_be:v1
+            sudo docker pull iwebdroid/fgtest_be:v2
             sudo docker-compose stop
             sudo docker-compose rm backend
             touch .env 
