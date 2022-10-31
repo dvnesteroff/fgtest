@@ -1,4 +1,4 @@
-# from django.db.models import F, Sum
+from django.db.models import Sum
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
 from django_filters.rest_framework import DjangoFilterBackend
@@ -87,27 +87,16 @@ class RecipeViewSet(ModelViewSet):
     @action(detail=False, permission_classes=[IsAuthenticated])
     def download_shopping_cart(self, request):
         # old
+        # ingredients = IngredientQuantity.objects.filter(
+        #     recipe__shopping_carts__user=request.user).values(
+        #     'ingredient__name', 'ingredient__measurement_unit', 'amount'
+        # )
+
         ingredients = IngredientQuantity.objects.filter(
             recipe__shopping_carts__user=request.user).values(
-            'ingredient__name', 'ingredient__measurement_unit', 'amount'
-        )
-
-        # new-1
-        # ingredients = IngredientQuantity.objects.filter(
-        #     recipe__shopping_carts__user=request.user).values(
-        #     'ingredient__name', 'ingredient__measurement_unit'
-        # ).annotate(amount=Sum('amount')).values_list(
-        #     'ingredient__name', 'amount', 'ingredient__measurement_unit'
-        # )
-
-        # new-2
-        # ingredients = IngredientQuantity.objects.filter(
-        #     recipe__shopping_carts__user=request.user).values(
-        #     name=F('ingredient__name'),
-        #     measurement_unit=F('ingredient__measurement_unit')
-        # ).annotate(amount=Sum('amount')).values_list(
-        #     'ingredient__name', 'amount', 'ingredient__measurement_unit'
-        # )
+                'ingredient__name',
+                'ingredient__measurement_unit').order_by(
+                    'ingredient__name').annotate(amount=Sum('amount'))
 
         shopping_cart = '\n'.join([
             f'{ingredient["ingredient__name"]} : {ingredient["amount"]} '
