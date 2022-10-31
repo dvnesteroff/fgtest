@@ -4,10 +4,14 @@ from django.db import models
 
 class User(AbstractUser):
     email = models.EmailField(
-        max_length=150, unique=True, verbose_name='Почта'
+        max_length=254,
+        unique=True,
+        verbose_name='Email'
     )
     username = models.CharField(
-        max_length=150, unique=True, verbose_name='Имя пользователя'
+        max_length=150,
+        unique=True,
+        verbose_name='Username'
     )
     first_name = models.CharField(
         max_length=150, verbose_name='Имя'
@@ -35,7 +39,7 @@ class Follow(models.Model):
     )
     following = models.ForeignKey(
         User, on_delete=models.CASCADE,
-        related_name='following', verbose_name='Автор подписки'
+        related_name='following', verbose_name='Автор (рецепта)'
     )
 
     class Meta:

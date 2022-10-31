@@ -2,7 +2,8 @@ from api.models import Recipe
 from djoser.serializers import UserCreateSerializer, UserSerializer
 from rest_framework import serializers
 from rest_framework.validators import UniqueTogetherValidator
-from users.models import Follow, User
+
+from .models import Follow, User
 
 
 class CustomUserCreateSerializer(UserCreateSerializer):
@@ -36,7 +37,7 @@ class FollowSerializer(serializers.ModelSerializer):
             UniqueTogetherValidator(
                 queryset=Follow.objects.all(),
                 fields=('user', 'following'),
-                message=('Вы уже подписаны на данного пользователя!')
+                message=('Вы уже подписаны на данного пользователя')
             )
         ]
 
@@ -47,7 +48,7 @@ class FollowSerializer(serializers.ModelSerializer):
         following = data['following']
         if request.user == following:
             raise serializers.ValidationError(
-                'Вы не можете подписаться на себя!'
+                'Вы не можете подписаться на себя'
             )
         return data
 
