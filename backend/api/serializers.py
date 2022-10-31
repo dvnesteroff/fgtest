@@ -1,20 +1,23 @@
-from api.models import (Favorite, Ingredient, IngredientQuantity, Recipe,
-                        ShoppingCart, Tag)
 from drf_extra_fields.fields import Base64ImageField
 from rest_framework import serializers
 from users.serializers import CustomUserSerializer
+
+from api.models import (Favorite, Ingredient, IngredientQuantity, Recipe,
+                        ShoppingCart, Tag)
 
 
 class TagSerializer(serializers.ModelSerializer):
     class Meta:
         model = Tag
-        fields = ('id', 'name', 'color', 'slug')
+        # fields = ('id', 'name', 'color', 'slug')
+        fields = '__all__'
 
 
 class IngredientSerializer(serializers.ModelSerializer):
     class Meta:
         model = Ingredient
-        fields = ('id', 'name', 'measurement_unit')
+        # fields = ('id', 'name', 'measurement_unit')
+        fields = '__all__'
 
 
 class IngredientQuantitySerializer(serializers.ModelSerializer):
