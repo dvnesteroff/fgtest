@@ -1,4 +1,4 @@
-from django.db.models import Sum
+from django.db.models import F, Sum
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
 from django_filters.rest_framework import DjangoFilterBackend
@@ -92,10 +92,19 @@ class RecipeViewSet(ModelViewSet):
         #     'ingredient__name', 'ingredient__measurement_unit', 'amount'
         # )
 
-        # new
+        # new-1
+        # ingredients = IngredientQuantity.objects.filter(
+        #     recipe__shopping_carts__user=request.user).values(
+        #     'ingredient__name', 'ingredient__measurement_unit'
+        # ).annotate(amount=Sum('amount')).values_list(
+        #     'ingredient__name', 'amount', 'ingredient__measurement_unit'
+        # )
+
+        # new-2
         ingredients = IngredientQuantity.objects.filter(
             recipe__shopping_carts__user=request.user).values(
-            'ingredient__name', 'ingredient__measurement_unit'
+            name=F('ingredient__name'),
+            measurement_unit=F('ingredient__measurement_unit')
         ).annotate(amount=Sum('amount')).values_list(
             'ingredient__name', 'amount', 'ingredient__measurement_unit'
         )
